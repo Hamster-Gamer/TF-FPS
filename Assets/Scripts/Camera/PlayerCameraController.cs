@@ -12,7 +12,10 @@ public class PlayerCameraController : MonoBehaviour
     void Start()
     {
         // Bloqueo de Cursor.
-        Cursor.lockState = CursorLockMode.Locked;   
+        Cursor.lockState = CursorLockMode.Locked;
+
+        // Establecer la rotación inicial basada en la rotación local de la cámara.
+        _xRotation = transform.localRotation.eulerAngles.x;
     }
 
     void Update()

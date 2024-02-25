@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class ObjectLife : MonoBehaviour
 {
-    void Start()
-    {
-        
-    }
-
     void OnTriggerEnter(Collider collider)
     {
-        if (collider.tag == "Player")
+        if (collider.CompareTag("Player"))
         {
+            FindObjectOfType<GameManager>().WinLife();
             Destroy(gameObject);
         }
     }

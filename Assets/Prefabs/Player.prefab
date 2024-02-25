@@ -131,6 +131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rb: {fileID: 2578043951196378219}
   _speedMovement: 15
+  _smoothStopping: 0.1
   _jumpForce: 5
 --- !u!1 &2578043951479052020
 GameObject:

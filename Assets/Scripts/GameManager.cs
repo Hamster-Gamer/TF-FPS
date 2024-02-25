@@ -16,4 +16,9 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene("GameOver");
         }
     }
+
+    public void WinLife()
+    {
+        _playerLife++;
+    }
 }

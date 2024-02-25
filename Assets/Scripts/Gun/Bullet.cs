@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] float _bulletTimeLife = 1f;
+    [SerializeField] float _shootingTimeLife = 1f;
+    [SerializeField] float _impactTimeLife = 0.25f;
+
+    void Start()
+    {
+        // Tiempo de Vida de Bala.
+        Destroy(gameObject, _shootingTimeLife);
+    }
 
     void OnCollisionEnter(Collision collision)
     {
@@ -12,9 +19,7 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             collision.gameObject.GetComponent<Enemy>()?.ReduceLife();
+            Destroy(gameObject, _impactTimeLife);
         }
-
-        // Tiempo de Vida de Bala.
-        Destroy(gameObject, _bulletTimeLife);
     }
 }
