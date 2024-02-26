@@ -7,10 +7,12 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] int _playerLife = 5;
     [SerializeField] GameObject _deadPanel;
+    [SerializeField] LifeBar _lifeBar;
 
     public void LoseLife()
     {
         _playerLife--;
+        _lifeBar.ReduceLife();
 
         if (_playerLife <= 0)
         {
@@ -23,5 +25,7 @@ public class GameManager : MonoBehaviour
     public void WinLife()
     {
         _playerLife++;
+
+        _lifeBar.IncreaseLife();
     }
 }

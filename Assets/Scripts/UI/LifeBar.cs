@@ -14,8 +14,15 @@ public class LifeBar : MonoBehaviour
         _currentLife = _maxLife;
     }
 
-    void Update()
+    public void ReduceLife()
     {
+        _currentLife--;
+        UpdateLifeBar();
+    }
+
+    public void IncreaseLife()
+    {
+        _currentLife++;
         UpdateLifeBar();
     }
 
