@@ -6,7 +6,11 @@ using UnityEngine.Rendering.LookDev;
 public class Enemy : MonoBehaviour
 {
     [Header("Stats")]
-    [SerializeField] int _enemyLife = 5;
+    [SerializeField] int _life = 5;
+    [SerializeField] float _speedWalk = 1f;
+    [SerializeField] float _speedRotation = 2f;
+    [SerializeField] float _speedRun = 2f;    
+    [SerializeField] float _rangeAttack = 5f;
 
     [Header("Drops")]
     [SerializeField] bool _generateObject = false;
@@ -19,14 +23,15 @@ public class Enemy : MonoBehaviour
 
     [Header("Conduct General")]
     [SerializeField] int _routine;
-    [SerializeField] float _chronometer;
+    float _chronometer;
     [SerializeField] Animator _animator;
-    [SerializeField] Quaternion _angle;
-    [SerializeField] float _angleDegress;
+    Quaternion _angle;
+    float _angleDegress;
 
     [Header("Conduct Attack")]
     [SerializeField] GameObject _targetPlayer;
-    [SerializeField] bool _isAttack;
+    [SerializeField] EnemyRange _colliderRangeAttack;
+    [HideInInspector] public bool _isAttack;
 
     void Update()
     {
@@ -35,7 +40,7 @@ public class Enemy : MonoBehaviour
 
     void Conduct()
     {
-        // Jugador Fuera del Rango de Distancia.
+        // Jugador Fuera de Rango.
         if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > 7.5f)
         {
             // Animación de Caminar si Estaba Corriendo.
@@ -53,10 +58,8 @@ public class Enemy : MonoBehaviour
                 _chronometer = 0;
             }
 
-            // Comportamiento a la Rutina Actual.
             if (_routine == 0)
             {
-                // Detiene la Animación de Caminar.
                 _animator.SetBool("Walk", false);
             }
 
@@ -72,36 +75,38 @@ public class Enemy : MonoBehaviour
             {
                 // Gira el Ángulo y Avanza.
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, _angle, 0.5f);
-                transform.Translate(Vector3.forward * 1 * Time.deltaTime);
+                transform.Translate(Vector3.forward * _speedWalk * Time.deltaTime);
                 _animator.SetBool("Walk", true);
             }
         }
 
-        // Jugador Dentro del Rango de Distancia.
+        // Jugador Dentro de Rango.
         else
         {
-            if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > 5 && !_isAttack)
+            // Calcula la Dirección para Mirar al Jugador.
+            Vector3 lookPosition = _targetPlayer.transform.position - transform.position;
+            lookPosition.y = 0;
+            Quaternion rotation = Quaternion.LookRotation(lookPosition);
+
+            if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _rangeAttack && !_isAttack)
             {
                 // Cambiar a Animación de Correr.
                 _animator.SetBool("Walk", false);
                 _animator.SetBool("Run", true);
-                transform.Translate(Vector3.forward * 2 * Time.deltaTime);
+                transform.Translate(Vector3.forward * _speedRun * Time.deltaTime);
                 _animator.SetBool("NewAttack", false);
                 
-                // Lógica de Seguimiento al Jugador.
-                var lookPosition = _targetPlayer.transform.position - transform.position;
-                lookPosition.y = 0;
-                var rotation = Quaternion.LookRotation(lookPosition);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, 2);
+                // Rotación Gradual hacia el Objetivo.
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, _speedRotation);
             }
 
             else
             {
-                // Ataca al Jugador.
+                // Rotación Gradual hacia el Objetivo.
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, _speedRotation);
+
                 _animator.SetBool("Walk", false);
                 _animator.SetBool("Run", false);
-                _animator.SetBool("NewAttack", true);
-                _isAttack = true;
             }
         }
     }
@@ -111,13 +116,16 @@ public class Enemy : MonoBehaviour
         // Reinicio de Estado de Ataque.
         _animator.SetBool("NewAttack", false);
         _isAttack = false;
+
+        // Habilita Collider del Rango del Enemigo para Atacar.
+        _colliderRangeAttack.GetComponent<BoxCollider>().enabled = true;
     }
 
     public void ReduceLife()
     {
-        _enemyLife -= 1;
+        _life -= 1;
 
-        if (_enemyLife <= 0)
+        if (_life <= 0)
         {
             gameObject.SetActive(false);
             Invoke("RandomDrops", _delayBeforeDrop);
