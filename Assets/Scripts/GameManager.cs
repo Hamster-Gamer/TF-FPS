@@ -16,9 +16,12 @@ public class GameManager : MonoBehaviour
 
         if (_playerLife <= 0)
         {
+            Time.timeScale = 0;
+            SceneManager.LoadScene(4);
+            /*
             _deadPanel.SetActive(true);
             Time.timeScale = 0;
-            Application.targetFrameRate = 60;
+            Application.targetFrameRate = 60;*/
         }
     }
 

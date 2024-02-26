@@ -128,4 +128,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shootingTimeLife: 1
-  _impactTimeLife: 0.25
+  _impactTimeLife: 0.1

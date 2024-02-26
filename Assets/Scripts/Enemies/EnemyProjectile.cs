@@ -24,6 +24,11 @@ public class EnemyProjectile : MonoBehaviour
 
             StartCoroutine(ShowDamageEffect());
         }
+
+        if (collider.CompareTag("Plataform"))
+        {
+            Destroy(gameObject, 0.1f);
+        }
     }
 
     IEnumerator ShowDamageEffect()
