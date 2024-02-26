@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] int _playerLife = 5;
+    [SerializeField] GameObject _deadPanel;
 
     public void LoseLife()
     {
@@ -13,7 +14,9 @@ public class GameManager : MonoBehaviour
 
         if (_playerLife <= 0)
         {
-            SceneManager.LoadScene("GameOver");
+            _deadPanel.SetActive(true);
+            Time.timeScale = 0;
+            Application.targetFrameRate = 60;
         }
     }
 
