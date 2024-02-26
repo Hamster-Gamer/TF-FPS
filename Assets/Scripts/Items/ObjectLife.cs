@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class ObjectLife : MonoBehaviour
 {
+    [SerializeField] AudioSource _audioSource;
+
     void OnTriggerEnter(Collider collider)
     {
         if (collider.CompareTag("Player"))
         {
             FindObjectOfType<GameManager>().WinLife();
-            Destroy(gameObject);
+
+            _audioSource.Play();
+
+            gameObject.SetActive(false);
+            Destroy(gameObject, 1f);
         }
     }
 }

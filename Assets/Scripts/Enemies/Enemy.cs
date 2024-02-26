@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.LookDev;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
@@ -10,13 +11,16 @@ public class Enemy : MonoBehaviour
     [SerializeField] float _speedWalk = 1f;
     [SerializeField] float _speedRotation = 2f;
     [SerializeField] float _speedRun = 2f;    
-    [SerializeField] float _rangeAttack = 5f;
+
+    [Header("AI Navigation")]
+    [SerializeField] NavMeshAgent _agent;
+    [SerializeField] float _distanceAttack = 7.5f;
+    [SerializeField] float _visionRadius = 10f;
 
     [Header("Fire")]
     [SerializeField] Transform _firePoint;
     [SerializeField] GameObject _bulletPrefab;
     [SerializeField] float _shotForce = 50f;
-    [SerializeField] float _bulletLifeTime = 5f;
 
     [Header("Drops")]
     [SerializeField] bool _generateObject = false;
@@ -47,11 +51,13 @@ public class Enemy : MonoBehaviour
     void Conduct()
     {
         // Jugador Fuera de Rango.
-        if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > 7.5f)
+        if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _visionRadius)
         {
             // Animación de Caminar si Estaba Corriendo.
             if (_animator.GetBool("Run"))
             {
+                _agent.enabled = false;
+
                 _animator.SetBool("Run", false);
                 _animator.SetBool("Walk", true);
             }
@@ -86,7 +92,6 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        // Jugador Dentro de Rango.
         else
         {
             // Calcula la Dirección para Mirar al Jugador.
@@ -94,7 +99,10 @@ public class Enemy : MonoBehaviour
             lookPosition.y = 0;
             Quaternion rotation = Quaternion.LookRotation(lookPosition);
 
-            if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _rangeAttack && !_isAttack)
+            _agent.enabled = true;
+            _agent.SetDestination(_targetPlayer.transform.position);
+
+            if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _distanceAttack && !_isAttack)
             {
                 // Cambiar a Animación de Correr.
                 _animator.SetBool("Walk", false);
@@ -115,6 +123,11 @@ public class Enemy : MonoBehaviour
                 _animator.SetBool("Run", false);
             }
         }
+
+        if (_isAttack)
+        {
+            _agent.enabled = false;
+        }
     }
 
     public void FireAttack()
@@ -130,7 +143,11 @@ public class Enemy : MonoBehaviour
     public void FinishAnimationAttack()
     {
         // Reinicio de Estado de Ataque.
-        _animator.SetBool("Attack", false);
+        if (Vector3.Distance(transform.position, _targetPlayer.transform.position) > _distanceAttack + 0.2f)
+        {
+            _animator.SetBool("Attack", false);
+        }
+        
         _isAttack = false;
 
         // Habilita Collider del Rango del Enemigo para Atacar.
