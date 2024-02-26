@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 2374113345682561600}
   - component: {fileID: 7220447616445637769}
   - component: {fileID: 3860941273047868169}
-  - component: {fileID: 6013252036364244757}
+  - component: {fileID: 8319476302131519024}
   m_Layer: 0
-  m_Name: Bullet
+  m_Name: Bullet_Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 85a8f23af8a1ac941a9720fd7b177024, type: 2}
+  - {fileID: 2100000, guid: 530af3a8082ffb14897ac6b74259b8a1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -115,7 +115,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 3
---- !u!114 &6013252036364244757
+--- !u!114 &8319476302131519024
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,8 +124,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4831494437135393723}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9421e96d34615fe4f885c86f8fd3de41, type: 3}
+  m_Script: {fileID: 11500000, guid: de764e86f045dce4394b073dae25180e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _shootingTimeLife: 1
   _impactTimeLife: 0.25
+  _damagePanel: {fileID: 0}

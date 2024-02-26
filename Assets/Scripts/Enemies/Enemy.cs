@@ -12,6 +12,12 @@ public class Enemy : MonoBehaviour
     [SerializeField] float _speedRun = 2f;    
     [SerializeField] float _rangeAttack = 5f;
 
+    [Header("Fire")]
+    [SerializeField] Transform _firePoint;
+    [SerializeField] GameObject _bulletPrefab;
+    [SerializeField] float _shotForce = 50f;
+    [SerializeField] float _bulletLifeTime = 5f;
+
     [Header("Drops")]
     [SerializeField] bool _generateObject = false;
     [Range(0f, 100f)]
@@ -94,7 +100,7 @@ public class Enemy : MonoBehaviour
                 _animator.SetBool("Walk", false);
                 _animator.SetBool("Run", true);
                 transform.Translate(Vector3.forward * _speedRun * Time.deltaTime);
-                _animator.SetBool("NewAttack", false);
+                _animator.SetBool("Attack", false);
                 
                 // Rotación Gradual hacia el Objetivo.
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, _speedRotation);
@@ -111,10 +117,20 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void FinishAttack()
+    public void FireAttack()
+    {
+        // Instanciar Bala.
+        GameObject newBullet = Instantiate(_bulletPrefab, _firePoint.position, Quaternion.identity);
+
+        // Fuerza de Bala.
+        Rigidbody rb = newBullet.GetComponent<Rigidbody>();
+        rb?.AddForce(transform.forward * _shotForce, ForceMode.Impulse);
+    }
+
+    public void FinishAnimationAttack()
     {
         // Reinicio de Estado de Ataque.
-        _animator.SetBool("NewAttack", false);
+        _animator.SetBool("Attack", false);
         _isAttack = false;
 
         // Habilita Collider del Rango del Enemigo para Atacar.

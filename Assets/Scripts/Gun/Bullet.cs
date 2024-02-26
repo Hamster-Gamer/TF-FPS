@@ -13,12 +13,12 @@ public class Bullet : MonoBehaviour
         Destroy(gameObject, _shootingTimeLife);
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collider)
     {
         // Daño al Enemigo.
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collider.gameObject.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<Enemy>()?.ReduceLife();
+            collider.gameObject.GetComponent<Enemy>()?.ReduceLife();
             Destroy(gameObject, _impactTimeLife);
         }
     }

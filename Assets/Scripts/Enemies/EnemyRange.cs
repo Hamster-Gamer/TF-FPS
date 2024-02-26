@@ -14,7 +14,7 @@ public class EnemyRange : MonoBehaviour
             // Activar y Desactivar Animaciones.
             _animatorEnemy.SetBool("Walk", false);
             _animatorEnemy.SetBool("Run", false);
-            _animatorEnemy.SetBool("NewAttack", true);
+            _animatorEnemy.SetBool("Attack", true);
 
             _scriptEnemy._isAttack = true;
             // Desactiva Collider Enemigo Evitando que se Active Repetidamente.
